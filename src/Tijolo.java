@@ -4,34 +4,34 @@ public class Tijolo extends Sprite {
     
     private boolean destruido;
 
-public Tijolo(int x, int y) {
+    public Tijolo(int x, int y) {
 
         iniciaTijolo(x, y);
-}
+    }
 
-private void iniciaTijolo(int x, int y) {
+    private void iniciaTijolo(int x, int y) {
 
-    this.PosX = x;
-    this.PosY = y;
+        this.PosX = x;
+        this.PosY = y;
 
-    destruido = false;
+        destruido = false;
 
-    carregaImagem();
-    getImageDimensions();
-}
+        carregaImagem();
+        getImageDimensions();
+    }
 
-private void carregaImagem() {
-    var ii = new ImageIcon();
-    imagemArq = ii.getImage();
-}
+    private void carregaImagem() {
+        var ii = new ImageIcon();
+        imagemArq = ii.getImage();
+    }
 
-boolean foiDestruido() {
+    boolean foiDestruido() {
 
-    return destruido;
-}
+        return destruido;
+    }
 
-void setDestruido(boolean val) {
+    void setDestruido(boolean val) {
 
-    destruido = val;
-}
+        destruido = val;
+    }
 }

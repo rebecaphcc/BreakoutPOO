@@ -9,50 +9,50 @@ public class Sprite {
     int imageHeight;
     Image imagemArq;
 
-protected void setX(int x) {
+    protected void setX(int x) {
 
-    this.PosX = x;
-}
+        this.PosX = x;
+    }
 
-int getX() {
+    int getX() {
 
-    return PosX;
-}
+        return PosX;
+    }
 
-protected void setY(int y) {
+    protected void setY(int y) {
 
-    this.PosY = y;
-}
+        this.PosY = y;
+    }
 
-int getY() {
+    int getY() {
 
-    return PosY;
-}
+        return PosY;
+    }
 
-int getImageWidth() {
+    int getImageWidth() {
 
-    return imageWidth;
-}
+        return imageWidth;
+    }
 
-int getImageHeight() {
+    int getImageHeight() {
 
-    return imageHeight;
-}
+        return imageHeight;
+    }
 
-Image getImage() {
+    Image getImage() {
 
-    return imagemArq;
-}
+        return imagemArq;
+    }
 
-Rectangle getRect() {
+    Rectangle getRect() {
 
-    return new Rectangle(PosX, PosY,
-            imagemArq.getWidth(null), imagemArq.getHeight(null));
-}
+        return new Rectangle(PosX, PosY,
+                imagemArq.getWidth(null), imagemArq.getHeight(null));
+    }
 
-void getImageDimensions() {
+    void getImageDimensions() {
 
-    imageWidth = imagemArq.getWidth(null);
-    imageHeight = imagemArq.getHeight(null);
-}
+        imageWidth = imagemArq.getWidth(null);
+        imageHeight = imagemArq.getHeight(null);
+    }
 }
