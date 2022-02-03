@@ -21,7 +21,7 @@ public class Bola extends Sprite {
         var ii = new ImageIcon();
         imagemArq = ii.getImage();
     }
-    
+
     void moveB() {
         PosX += dirX;
         PosY += dirY;
@@ -41,8 +41,8 @@ public class Bola extends Sprite {
     }
 
     private void resetaB() {
-        PosX = Setup.INICIA_BOLAX;
-        PosY = Setup.INICIA_BALL_Y;
+        PosX = Setup.INICIA_BOLA_X;
+        PosY = Setup.INICIA_BOLA_Y;
     }
 
     void setDirX(int x) {
