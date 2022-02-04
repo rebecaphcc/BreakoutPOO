@@ -1,41 +1,38 @@
 import javax.swing.ImageIcon;
-import java.awt.event.KeyEvent;
+//import java.awt.event.KeyEvent;
 
 public class Raquete extends Sprite{
-    private int dX;
+    int velocidade = 1;
 
-    public Raquete() {
-        iniciaRaquete();
+    public Raquete(int X, int Y, int imageWidth, int imageHeight) {
+        super(X, Y, imageWidth, imageHeight);
+        //iniciaRaquete();
     }
 
     public void iniciaRaquete(){
-        carregaImagem();
-        getImageDimensions();
-        resetaR();
+        this.carregaImagem();
+       // getImageDimensions();
+       // resetaR();
     }
 
-    private void carregaImagem() {
-
-        var ii = new ImageIcon();
-        imagemArq = ii.getImage();
-
+    //@Override
+    public void carregaImagem(){
+        // var ii = new ImageIcon();
+        // imagemArq = ii.getImage();
+        super.setImage(new ImageIcon("caminho da raquete"));
     }
     
+
+/*
     void moveR () {
-
-        PosX += dX;
-
-        if ( PosX <= 0) {
-
-            PosX =0;
+        super.posX += this.velocidade;
+        if ( posX >= Setup.WIDTH - imageWidth) {
+            super.posX = Setup.WIDTH - imageWidth;
         }
-
-        if ( PosX >= Setup.WIDTH -imageWidth) {
-            PosX = Setup.WIDTH - imageWidth;
-        }
-
     }
+*/
 
+/*
     void Tecla( KeyEvent e) {
 
         int key = e.getKeyCode();
@@ -72,4 +69,5 @@ public class Raquete extends Sprite{
         PosY = Setup.INICIA_RAQUETE_Y;
 
     }
+*/
 }

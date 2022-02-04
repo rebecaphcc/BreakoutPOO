@@ -4,34 +4,31 @@ public class Tijolo extends Sprite {
     
     private boolean destruido;
 
-    public Tijolo(int x, int y) {
-
-        iniciaTijolo(x, y);
+    public Tijolo(int X, int Y, int imageWidth, int imageHeight) {
+        super(X, Y, imageWidth, imageHeight);
+        iniciaTijolo(X, Y);
     }
 
     private void iniciaTijolo(int x, int y) {
+ //       super.PosX = x;
+//        super.PosY = y;
+        this.destruido = false;
 
-        this.PosX = x;
-        this.PosY = y;
-
-        destruido = false;
-
-        carregaImagem();
+        this.carregaImagem();
         getImageDimensions();
     }
 
-    private void carregaImagem() {
-        var ii = new ImageIcon();
-        imagemArq = ii.getImage();
+
+    public void carregaImagem(){
+        // var ii = new ImageIcon();
+        // imagemArq = ii.getImage();
+        super.setImage(new ImageIcon("caminho da image do tijolo"));
     }
 
-    boolean foiDestruido() {
 
-        return destruido;
-    }
 
-    void setDestruido(boolean val) {
 
-        destruido = val;
-    }
+    boolean getDestruido() { return this.destruido; }
+
+    void setDestruido(boolean val) { this.destruido = val; }
 }
