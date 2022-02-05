@@ -1,12 +1,12 @@
 public interface Setup {
 
-    int WIDTH = 600;
-    int HEIGHT = 800;
-    int BOLA_FORA = 780;
-    int N_TIJOLOS = 30;
-    int INICIA_RAQUETE_X = 400;
-    int INICIA_RAQUETE_Y = 360;
-    int INICIA_BOLAX = 430;
-    int INICIA_BALL_Y = 710;
+    int WIDTH = 720;
+    int HEIGHT = 1280;
+    int BOLA_FORA = 1260;
+    int N_TIJOLOS = 56;
+    int INICIA_RAQUETE_X = 360;
+    int INICIA_RAQUETE_Y = 1026;
+    int INICIA_BOLA_X = 360;
+    int INICIA_BOLA_Y = 960;
     int PERIODO = 10;
 }
