@@ -44,8 +44,6 @@ public class Tijolo extends Sprite {
         this.PosY = y;
 
         destruido = false;
-
-        carregaImagem();
         getImageDimensions();
     }
 
