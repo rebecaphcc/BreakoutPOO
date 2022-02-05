@@ -1,3 +1,4 @@
+package src;
 import javax.swing.ImageIcon;
 
 class Money extends ElementoConsumivel{
@@ -6,10 +7,11 @@ class Money extends ElementoConsumivel{
         super(X, Y, imageWidth, imageHeight);
     }
 
-    public void carregaImagem(){
+    @Override
+    public void carregaImagem(String imgPath){
         // var ii = new ImageIcon();
         // imagemArq = ii.getImage();
-        super.setImage(new ImageIcon("caminho da raquete"));
+        super.setImage(new ImageIcon(imgPath));
     }
 
 }
