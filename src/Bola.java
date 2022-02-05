@@ -18,7 +18,7 @@ public class Bola extends Sprite {
         }
 
     private void carregaImagem() {
-        var ii = new ImageIcon();
+        var ii = new ImageIcon("src/Sprites/bola.png");
         imagemArq = ii.getImage();
     }
 

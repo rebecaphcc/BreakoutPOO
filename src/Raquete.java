@@ -16,7 +16,7 @@ public class Raquete extends Sprite{
 
     private void carregaImagem() {
 
-        var ii = new ImageIcon();
+        var ii = new ImageIcon("src/Sprites/Raquete.png");
         imagemArq = ii.getImage();
 
     }
