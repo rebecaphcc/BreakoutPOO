@@ -75,10 +75,11 @@ public class Bola extends Sprite {
    
     @Override
     public void desenhar(){
-            int[] XY = super.getPosicao();
+           int[] XY = super.getPosicao();
 
           //  this.componente.setLocation(X, Y);
-          this.componente.setBounds ( XY[0],  XY[1], super.getImageWidth(), super.getImageHeight());
+          //  this.componente.setBounds ( XY[0],  XY[1], super.getImageWidth(), super.getImageHeight());
+          this.componente.setLocation(XY[0], XY[1]);
     }
    
     

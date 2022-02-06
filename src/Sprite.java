@@ -1,10 +1,6 @@
 package src;
-
-//import java.awt.Image;
-import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 
 public abstract class Sprite {
@@ -26,6 +22,10 @@ public abstract class Sprite {
            // this.caminoImagem = imagePath;
     };
 
+    public Sprite(int X, int Y){
+            this.posX = X;
+            this.posY = Y;
+    };
     
     protected void setX (int x) {  this.posX = x;  }
     protected int getX () {   return this.posX;  }
@@ -81,7 +81,7 @@ public abstract class Sprite {
     }
     public void setImageHeight(int alt) {
             this.imageHeight = alt;
-            this.posY2 = getY2() + alt;
+            this.posY2 = getY() + alt;
     }
     
     

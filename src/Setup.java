@@ -3,7 +3,7 @@ package src;
 public interface Setup {
 
     String level = "easy";
-    int WIDTH = 421; //600  ->720
+    int WIDTH = 520; //600  ->720 -> 421 -> 600
     int HEIGHT = 750; //800  -> 1280
     int LIMITE_ALTURA_BOLA = 780; //BOLA_FORA
     int N_TIJOLOS = 56;

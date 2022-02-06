@@ -9,23 +9,28 @@ public class Tijolo extends Sprite  {
     private boolean destruido;
     private JLabel componente;
     
-    public Tijolo(int X, int Y, int imageWidth, int imageHeight, String cor) {
+    // CONTRUTOR 1
+    public Tijolo(int X, int Y, int imageWidth, int imageHeight,  String cor) {
             super(X, Y, imageWidth, imageHeight);
          //   super.setPosicao(x, y);
+            iniciaTijolo(cor);
+    }
+    
+    // CONSTRUTOR 2
+    public Tijolo(int X, int Y, JLabel comp, String cor) { 
+            super(X, Y);
+            this.componente = comp;
             iniciaTijolo(cor);
     }
 
     private void iniciaTijolo(String c) {
             this.destruido = false;
             this.cor = c;
-            //this.carregaImagem("ddds");
-            getImageDimensions();
+          //  getImageDimensions();
     }
 
     @Override
     public void carregaImagem(String imgPath){
-            // var ii = new ImageIcon();
-            // imagemArq = ii.getImage();
             super.setImage(new ImageIcon(imgPath) );
             this.componente.setIcon(new ImageIcon(imgPath));
     }
@@ -46,18 +51,15 @@ public class Tijolo extends Sprite  {
 
     
     
+    
+    
+    
     @Override
-    public JLabel obterComponenteBola() {  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public JLabel obterComponenteBola() { return null; }
     @Override
-    public void setarComponenteBola(JLabel c) { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void setarComponenteBola(JLabel c) {   }
     @Override
-    public JLabel obterComponenteRaquete() { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public JLabel obterComponenteRaquete() { return null; }
     @Override
-    public void setarComponenteRaquete(JLabel c) { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-  
+    public void setarComponenteRaquete(JLabel c) {  }
 }
