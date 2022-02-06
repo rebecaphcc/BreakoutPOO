@@ -1,5 +1,4 @@
 package src;
-
 import javax.swing.JLabel;
 
 class ElementoConsumivel extends Sprite{
