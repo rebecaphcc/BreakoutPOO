@@ -1,60 +1,60 @@
 package src;
 import javax.swing.JLabel;
 
-class ElementoConsumivel extends Sprite{
+abstract class ElementoConsumivel extends Sprite{
     
-    private int raio;
-    private boolean eliminado = false;
-    String estado = "visivel";
-    boolean capturado = false;
+    protected int raio;
+    protected boolean eliminado = false;
+    protected String estado = "visivel";
+    protected JLabel componente ;
+   // protected boolean capturado = false;
 
-
-    public ElementoConsumivel(int X, int Y, int imageWidth, int imageHeight){
-          super(X, Y, imageWidth, imageHeight);
+    public ElementoConsumivel(int X, int Y){
+          super(X, Y);
     }
 
+    
     public int getRaio(){
-        return this.raio;
+          return this.raio;
     }
 
     public void setRaio(int tamanhoRaio){
-        this.raio = tamanhoRaio;
+          this.raio = tamanhoRaio;
     }
 
     public void setEliminar(){
-        this.eliminado = true;
+          this.eliminado = true;
     }
 
-    public boolean getEliminar(){
-        return this.eliminado;
+    public boolean foiEliminado(){
+          return this.eliminado;
     }
 
+    
+    
+    
+
+    @Override
+    abstract public JLabel obterComponenteBola();
+    @Override
+    abstract public void setarComponenteBola(JLabel c);
+    @Override
+    abstract public JLabel obterComponenteTijolo();
+    @Override
+    abstract public void setarComponenteTijolo(JLabel c);
+    @Override
+    abstract public JLabel obterComponenteRaquete();
+    @Override
+    abstract public void setarComponenteRaquete(JLabel c);
+    
+    
+    
+    /*
     boolean getCapturado(){
         return this.capturado;
     }
-
     void setCapturado(boolean val){
         this.capturado = val;
     }
-    
-    
-
-    @Override
-    public JLabel obterComponenteBola() { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    @Override
-    public void setarComponenteBola(JLabel c) {throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    @Override
-    public JLabel obterComponenteTijolo() { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    @Override
-    public void setarComponenteTijolo(JLabel c) {throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    @Override
-    public JLabel obterComponenteRaquete() { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    @Override
-    public void setarComponenteRaquete(JLabel c) { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    */
 }

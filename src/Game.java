@@ -5,9 +5,11 @@ import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyListener;
+import java.awt.geom.Area;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 
 class Game implements Setup {
@@ -16,11 +18,13 @@ class Game implements Setup {
     public static String level;
     public static Sprite bola; // OU Bola bola
     public static Sprite raquete; // OU Raquete raquete
-    public static ArrayList<PowerUp> listaPowerUps;
+    public static ArrayList<ElementoConsumivel> listaPowerUps;
     public static ArrayList<Sprite> listaTijolos;   // OU: ArrayList<Tijolo>
     public static JPanel painel;
-    public static JLabel labelScore;
+    public static JLabel labelScore; // JLabel para exibir o nome "score"
     public static JLabel labelScoreNumeros; // JLabel por onde serão exibidos os números
+  //  public static  int[][] matriz;
+    private static Random gerar = new Random();
    
 // public static BufferStrategy strategy;
 
@@ -29,16 +33,17 @@ class Game implements Setup {
           Game.startSetup();
     }
     
-    static void startSetup() {
+    private static void startSetup() {
             score = 000;
           //  level = Setup.level;
             bola = new Bola( Setup.INICIA_BOLA_X , Setup.INICIA_BOLA_Y, 50, 50, new JLabel());
             raquete = new Raquete( Setup.INICIA_RAQUETE_X, Setup.INICIA_RAQUETE_Y, 100, 100, new JLabel() );
             Game.listaTijolos = new ArrayList<>(); 
+            Game.listaPowerUps = new ArrayList<>();
             
             // 7 linhas com 8 colunas cada (80x28)
-            for( int linha=0, alturaTijolo=28;  linha < 7; linha++){
-                    for( int coluna=0, larguraTijolo = 80;  coluna < 8; coluna++){
+            for( int linha=0, alturaTijolo=28+10;  linha < 7; linha++){
+                    for( int coluna=0, larguraTijolo = 80+10;  coluna < 8; coluna++){
                             
                             // rosa, vermelha, laranja, amarela, verde, azul, roxo
                             String cor="", newPath="", pathIMG = "C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\";
@@ -68,9 +73,30 @@ class Game implements Setup {
                     }
             }
             
+           
+           
+         
+            // CRIANDO 10 BUFFs (POWER UPS)
+            for( int c = 0; c < 10; c++ ){
+                    int[] xy1 = Game.gerarMatrizCoordenadas(); // coordenada aleatoria 1
+                
+                    Game.listaPowerUps.add(
+                            new PowerUp(  
+                                    xy1[0], xy1[1], new JLabel() 
+                            )
+                    );
+            }
             
-            
-            
+            for ( ElementoConsumivel pow : Game.listaPowerUps ){
+                    pow.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\debuff.png");
+                   
+                    Dimension dimensaoPowerUp = pow.obterComponentePowerUp().getPreferredSize();   
+                    pow.obterComponentePowerUp() 
+                                    .setBounds(   pow.getX(), pow.getY(),  dimensaoPowerUp.width,  dimensaoPowerUp.height );  
+                   
+                    pow.setImageWidth( dimensaoPowerUp.width); 
+                    pow.setImageHeight( dimensaoPowerUp.height );
+            }
            
             bola.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\bola.png");
             raquete.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\Raquete.png");
@@ -110,6 +136,10 @@ class Game implements Setup {
                       Game.painel.add( ti.obterComponenteTijolo());
             }
             
+            for(ElementoConsumivel ec : Game.listaPowerUps){
+                      Game.painel.add( ec.obterComponentePowerUp() );
+            }
+            
             Game.labelScoreNumeros = new JLabel();
             Game.labelScore = new JLabel();
             labelScore.setText("Score");
@@ -146,7 +176,7 @@ class Game implements Setup {
     }
 
     static void gameLoop() {
-            int segundo  =0;
+            int segundos  =0;
 
             try{
                 while (true){ 
@@ -155,9 +185,20 @@ class Game implements Setup {
                         Game.bola.desenhar();
                         Game.bola.atualizar();
                         Game.raquete.desenhar();
-                        Game.verificarColisao( (Bola)  Game.bola);
                         Game.desenharPontos();
+                        
+                        Game.verificarColisao( (Bola)  Game.bola); // VERIFICA COLISÃO DA BOLA COM AS PAREDES
+                        Game.verificarColisao ( (Bola) Game.bola, Game.listaTijolos  ); // VERIFICA COLISÃO DA BOLA COM OS "TIJOLOS"
+                        
+                        for(ElementoConsumivel ec : Game.listaPowerUps){
+                             if (segundos == 1000)
+                                       ec.atualizar();
+                             ec.desenhar();
+                        }
+                        
                         Thread.sleep(10);
+                       ++segundos;
+                        // O LOOP É REINICIADO A CADA 10 MILISSEGUNDOS!
                 }
 
             }catch(InterruptedException e){
@@ -169,22 +210,81 @@ class Game implements Setup {
     static void verificarColisao(Bola bola){
          //  System.out.println("X2 da bola: "+ bola.getX2());
           
-           // VERIFICANDO COLISAO DA BOLA COM AS PAREDES
-           if( (bola.getX() <= 0)  ||  ( (bola.getX2() ) >= (Setup.WIDTH-10) )  )
-                bola.setDirX(-1);
-           
-           else if( (bola.getY() <= 0)  ||  (( bola.getY2() ) >= (Setup.HEIGHT-28) )  )
-                bola.setDirY(-1);
-           
+           // VERIFICANDO COLISAO DA BOLA COM AS PAREDES DE CIMA ESQUERDA E DIREITA
+           if (bola.getY2() < Setup.HEIGHT){
+               
+                    if( (bola.getX() <= 0)  ||  ( (bola.getX2() ) >= (Setup.WIDTH-10) )  )
+                         bola.setDirX(-1);
+
+                    else if( (bola.getY() <= 0)  ||  (( bola.getY2() ) >= (Setup.HEIGHT-28) )  )
+                         bola.setDirY(-1);
+           }
            
            // VERIFICANDO COLISAO DA BOLA COM A RAQUETE:
-           if( (bola.getY2() >= raquete.getY())  &&   (bola.getX2()  > raquete.getX())  &&  (bola.getX() < raquete.getX2()  )   )
-                bola.setDirY(-1);
+           if( 
+               (bola.getY2() >= raquete.getY())  && 
+                   (bola.getY() <= raquete.getY2())  && 
+                         (bola.getX2()  >= raquete.getX()) && 
+                             (bola.getX() <= raquete.getX2()  )             
+                                  ){       bola.setDirY(-1);       }
+    }
+    
+    private static void verificarColisao(Bola bola, ArrayList<Sprite> tijolos){
+        
+        for( Sprite tijolo : tijolos){ // VERIFICANDO COLISÃO DA BOLA COM CADA TIJOLO
+              
+                  Tijolo tlo = (Tijolo) tijolo; // TROCANDO O TIPO DO TIJOLO DE "SPRITE" PARA "TIJOLO" PARA ASSIM ACESSAR O MÉTODO "getDestrutiel()"
+                 
+                  if (Game.isCollided(  bola,  (Tijolo) tijolo  ) && tlo.getDestrutivel()){ // SE COLIDIRAM, E O TIJOLO É DESTRUTÍVEL ENTÃO O MESMO DESAPARECE
+                           tlo.obterComponenteTijolo().setVisible(false);
+                           tlo.setDestrutivel(false);// TORNANDO O TIJOLO INDESTRUTÍVEL DEPOIS QUE ELE É APAGADO DA TELA PARA QUE ELE NÃO CONTABILIZE PONTOS
+                    };
+        }
     }
     
     
-    private static void desenharPontos(){
+    private static boolean isCollided(Bola bola, Tijolo ti){
+                Area bolaHitbox = new Area( bola.obterComponenteBola().getBounds()  );
+                Area tijoloHitbox = new Area( ti.obterComponenteTijolo().getBounds()  );
+                
+                 // CASO A HITBOX DA BOLA TOQUE NA HITBOX DE "TIJOLO" É RETORNADO O VALOR "TRUE"
+                if ( bolaHitbox.intersects( tijoloHitbox.getBounds2D() )){
+                       Game.score++; 
+                       return true; 
+                }else
+                       return false;
+    }
+    
+    
+    public static int[] gerarMatrizCoordenadas(){
         
+            int[][] matrizValoresPossiveis = new int[][]{
+                { 20 , 300},
+                {100, 300},
+                {350, 300},
+                {400, 300},
+                {10, 500},
+                {100, 500},
+                {350, 500},
+                {400, 500}
+           };
+        
+            int X =   matrizValoresPossiveis [ Game.gerar.nextInt(8)] [0];
+            int Y =  matrizValoresPossiveis [ Game.gerar.nextInt(8)] [1];
+            
+            return  new int[]{X, Y}; 
+            /*  
+            int[][] matrizProvisoria = new int[8][2];
+            
+            for (int coluna=0; coluna <8; coluna++){
+                    for (int linha=0; linha<2; linha++){
+                            
+                    }
+            }*/
+        
+    }
+    
+    private static void desenharPontos(){
             JLabel numeros = Game.labelScoreNumeros;
             String numeroScore = "000";
 
@@ -194,6 +294,7 @@ class Game implements Setup {
                         numeroScore = "0"+Game.score;
             else if ( Game.score >= 100 && Game.score <1000 )
                         numeroScore = String.valueOf( Game.score );
+                                                // convertendo score pra String
 
             numeros.setText(numeroScore);
             numeros.setBounds(17, -5, 120, 120);
@@ -203,3 +304,8 @@ class Game implements Setup {
       }
     
 }
+
+
+
+
+//non-static variable "this" cannot be referenced from a static context

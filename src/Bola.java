@@ -80,6 +80,7 @@ public class Bola extends Sprite {
           //  this.componente.setLocation(X, Y);
           //  this.componente.setBounds ( XY[0],  XY[1], super.getImageWidth(), super.getImageHeight());
           this.componente.setLocation(XY[0], XY[1]);
+          // MOVENDO A BOLA
     }
    
     
@@ -102,6 +103,10 @@ public class Bola extends Sprite {
     @Override
     public void setarComponenteRaquete(JLabel c) {  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    @Override
+     public JLabel obterComponentePowerUp( ){ return null; }
+    @Override
+     public void setarComponentePowerUp(JLabel c){}
 }
 
 /*

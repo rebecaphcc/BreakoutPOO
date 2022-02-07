@@ -102,6 +102,10 @@ public class Raquete extends Sprite implements KeyListener{
     public JLabel obterComponenteTijolo() { return null; }
     @Override
     public void setarComponenteTijolo(JLabel c) { }
+    @Override
+     public JLabel obterComponentePowerUp(){ return null;}
+    @Override
+     public void setarComponentePowerUp(JLabel c){}
 }
 
 

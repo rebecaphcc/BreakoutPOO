@@ -63,9 +63,12 @@ public abstract class Sprite {
     abstract public void setarComponenteTijolo(JLabel c);
     abstract public JLabel obterComponenteRaquete();
     abstract public void setarComponenteRaquete(JLabel c);
+    abstract public JLabel obterComponentePowerUp();
+    abstract public void setarComponentePowerUp(JLabel c);
     
+    
+     // MÉTODOS PARA A SOBRESCRITA
     public void atualizar(){ }
-    
     public void desenhar(){ }
     
    
@@ -84,6 +87,7 @@ public abstract class Sprite {
             this.posY2 = getY() + alt;
     }
     
+   
     
     
     public ImageIcon getImage() {
@@ -116,8 +120,8 @@ public abstract class Sprite {
 
 
     Rectangle getRect() {
-        return new Rectangle(this.posX, this.posY, this.imageWidth, this.imageHeight);
-                //imagemArq.getWidth(null), imagemArq.getHeight(null));
+            return new Rectangle(this.posX, this.posY, this.imageWidth, this.imageHeight);
+                    //imagemArq.getWidth(null), imagemArq.getHeight(null));
     }
 
     public void getImageDimensions() {
