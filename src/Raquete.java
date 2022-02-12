@@ -67,7 +67,7 @@ public class Raquete extends Sprite implements KeyListener{
                            int X2 = raquete.getX2() + 30;  // raquete.getX() + raquete.getImageWidth() + 30;
                            System.out.println("width: "+raquete.getImageWidth() + "// X2: "+X2);
                            
-                           if ( X2 <= Setup.WIDTH-20) {
+                           if ( X2 <= Setup.WIDTH-30) {
                                   raquete.setX (X1);  
                                   raquete.setX2 (X2);
                            }
@@ -103,9 +103,13 @@ public class Raquete extends Sprite implements KeyListener{
     @Override
     public void setarComponenteTijolo(JLabel c) { }
     @Override
-     public JLabel obterComponentePowerUp(){ return null;}
+     public JLabel obterComponenteDebuff() { return null;   }
+     @Override
+     public void setarComponenteDebuff(JLabel c) {   }
     @Override
-     public void setarComponentePowerUp(JLabel c){}
+    public JLabel obterComponenteBuff() { return null; }
+    @Override
+    public void setarComponenteBuff(JLabel c) { }
 }
 
 

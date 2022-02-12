@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 public class Tijolo extends Sprite  {
 
     private String cor;
-    private boolean destrutivel;
+    private boolean destruido;
     private JLabel componente;
     private static Random decidirDestruicao = new Random();
     
@@ -27,8 +27,8 @@ public class Tijolo extends Sprite  {
 
     private void iniciaTijolo(String c) {
             setCor(c);
-            boolean decisaoAleatoria  = Tijolo.decidirDestruicao.nextBoolean();
-            setDestrutivel( decisaoAleatoria );
+       //     boolean decisaoAleatoria  = true; // Tijolo.decidirDestruicao.nextBoolean();
+            setDestruido( false );
     }
 
     @Override
@@ -36,7 +36,9 @@ public class Tijolo extends Sprite  {
             super.setImage(new ImageIcon(imgPath) );
        //     this.componente.setIcon(new ImageIcon(imgPath));
             ImageIcon iconeDiminuido = new ImageIcon(
-                    new ImageIcon(imgPath).getImage().getScaledInstance(70, 20, Image.SCALE_DEFAULT)
+                    new ImageIcon( imgPath )
+                            .getImage()
+                                    .getScaledInstance(70, 20, Image.SCALE_DEFAULT)
             );
             this.componente.setIcon( iconeDiminuido);
     }
@@ -51,10 +53,10 @@ public class Tijolo extends Sprite  {
     }
 
 
-    boolean getDestrutivel() { return this.destrutivel; }
+    public boolean getDestruido() { return this.destruido; }
+    public void setDestruido( boolean val) { this.destruido = val; }
 
-    void setDestrutivel(boolean val) { this.destrutivel = val; }
-
+    
     
     public String getCor(){
            return this.cor;
@@ -74,8 +76,13 @@ public class Tijolo extends Sprite  {
     public JLabel obterComponenteRaquete() { return null; }
     @Override
     public void setarComponenteRaquete(JLabel c) {  }
+     @Override
+     public JLabel obterComponenteDebuff() { return null;   }
+     @Override
+     public void setarComponenteDebuff(JLabel c) {   }
     @Override
-     public JLabel obterComponentePowerUp( ){ return null; }
+    public JLabel obterComponenteBuff() { return null; }
     @Override
-     public void setarComponentePowerUp(JLabel c){}
+    public void setarComponenteBuff(JLabel c) {   }
+     
 }

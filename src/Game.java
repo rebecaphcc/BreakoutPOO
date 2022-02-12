@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 
 class Game implements Setup {
@@ -18,13 +19,14 @@ class Game implements Setup {
     public static String level;
     public static Sprite bola; // OU Bola bola
     public static Sprite raquete; // OU Raquete raquete
-    public static ArrayList<ElementoConsumivel> listaPowerUps;
+    public static ArrayList<ElementoConsumivel> listaDebuffs;
     public static ArrayList<Sprite> listaTijolos;   // OU: ArrayList<Tijolo>
+    public static ArrayList<ElementoConsumivel> listaBuffs;
     public static JPanel painel;
     public static JLabel labelScore; // JLabel para exibir o nome "score"
     public static JLabel labelScoreNumeros; // JLabel por onde serão exibidos os números
-  //  public static  int[][] matriz;
     private static Random gerar = new Random();
+    private static boolean jogando = true;
    
 // public static BufferStrategy strategy;
 
@@ -37,9 +39,12 @@ class Game implements Setup {
             score = 000;
           //  level = Setup.level;
             bola = new Bola( Setup.INICIA_BOLA_X , Setup.INICIA_BOLA_Y, 50, 50, new JLabel());
-            raquete = new Raquete( Setup.INICIA_RAQUETE_X, Setup.INICIA_RAQUETE_Y, 100, 100, new JLabel() );
+            raquete = new Raquete( (int) Setup.INICIA_RAQUETE_X, (int) Setup.INICIA_RAQUETE_Y, 100, 100, new JLabel() );
             Game.listaTijolos = new ArrayList<>(); 
-            Game.listaPowerUps = new ArrayList<>();
+            Game.listaDebuffs = new ArrayList<>();
+            Game.listaBuffs = new ArrayList<>();
+            
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             // 7 linhas com 8 colunas cada (80x28)
             for( int linha=0, alturaTijolo=28+10;  linha < 7; linha++){
@@ -57,13 +62,13 @@ class Game implements Setup {
                                   case 6:  cor = "roxo";  newPath = pathIMG.concat("roxo.png"); break;
                             }
                         
-                            Tijolo tijolo = new Tijolo( 10+(coluna * larguraTijolo),  100 + (linha*alturaTijolo) ,  new JLabel(), cor);
+                            Tijolo tijolo = new Tijolo( 50+(coluna * larguraTijolo),  100 + (linha*alturaTijolo) ,  new JLabel(), cor);
                             tijolo.carregaImagem(newPath);
                             Dimension dimensaoTijolo = tijolo.obterComponenteTijolo().getMinimumSize();
                             tijolo
                                     .obterComponenteTijolo()
                                         .setBounds(
-                                                tijolo.getX(), 
+                                                tijolo.getX(), // getX() pertence a super-classe Sprite!
                                                     tijolo.getY(), 
                                                         dimensaoTijolo.width, 
                                                              dimensaoTijolo.height
@@ -72,32 +77,51 @@ class Game implements Setup {
                             Game.listaTijolos.add( tijolo );
                     }
             }
-            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
            
+            int[][] coordBuffs = new int[][]{  { (Setup.WIDTH/2), 20 },    { (Setup.WIDTH)-100, 20 },   { (Setup.WIDTH)-100, 600 },  { 20, 600 } }; 
+            
+              // CRIANDO 10 BUFFs 
+            for ( int b= 0;  b < coordBuffs.length; b++  ){
+                
+                   Buff buff = new Buff( coordBuffs[b][0], coordBuffs[b][1], new JLabel() ) ;
+                   Game.listaBuffs.add(  buff  );
+                   buff.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\coin.png");
+                   
+                   Dimension dimensaoBuff = buff.obterComponenteBuff().getPreferredSize();   
+                   buff.obterComponenteBuff()
+                                    .setBounds(   // SETANDO A HITBOX DA LABEL
+                                            buff.getX(), 
+                                                  buff.getY(),  
+                                                        dimensaoBuff.width,  
+                                                              dimensaoBuff.height 
+                                    );  
+                   
+                    buff.setImageWidth( dimensaoBuff.width); 
+                    buff.setImageHeight( dimensaoBuff.height );
+            }
+            
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
            
          
-            // CRIANDO 10 BUFFs (POWER UPS)
-            for( int c = 0; c < 10; c++ ){
-                    int[] xy1 = Game.gerarMatrizCoordenadas(); // coordenada aleatoria 1
+            // CRIANDO 10 DEBUFFs (OU POWER UPS)
+            for( int i = 0; i < 10; i++ ){
+                    int[] xy = Game.gerarMatrizCoordenadas(); // coordenada aleatoria 1
                 
-                    Game.listaPowerUps.add(
-                            new PowerUp(  
-                                    xy1[0], xy1[1], new JLabel() 
-                            )
-                    );
+                    ElementoConsumivel debuff = new Debuff(     xy[0],    xy[1],    new JLabel()   );
+                    Game.listaDebuffs.add( debuff );
+                   // ElementoConsumivel buff = Game.listaBuffs.get( index );
+                    debuff.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\debuff.png");
+                    Dimension dimensaoDeBuff  = debuff.obterComponenteDebuff().getPreferredSize();
+                    debuff.obterComponenteDebuff().setBounds( debuff.getX(), debuff.getY(), dimensaoDeBuff.width, dimensaoDeBuff.height );
+                    debuff.setImageWidth(dimensaoDeBuff.width);
+                    debuff.setImageHeight(dimensaoDeBuff.height);
             }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
-            for ( ElementoConsumivel pow : Game.listaPowerUps ){
-                    pow.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\debuff.png");
-                   
-                    Dimension dimensaoPowerUp = pow.obterComponentePowerUp().getPreferredSize();   
-                    pow.obterComponentePowerUp() 
-                                    .setBounds(   pow.getX(), pow.getY(),  dimensaoPowerUp.width,  dimensaoPowerUp.height );  
-                   
-                    pow.setImageWidth( dimensaoPowerUp.width); 
-                    pow.setImageHeight( dimensaoPowerUp.height );
-            }
-           
+          
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             bola.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\bola.png");
             raquete.carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\Raquete.png");
             // A imagem sempre deve ser inserida primeiro no JLabel e depois é que deve se acessado o seu método "getPreferredSize() e setBounds()"
@@ -115,6 +139,8 @@ class Game implements Setup {
             bola.setImageWidth( dimensaoBola.width); 
             bola.setImageHeight( dimensaoBola.height );
             
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             //raquete.obterComponenteRaquete().setSize(new Dimension(247, 40));
             Dimension dimensaoRaquete = raquete.obterComponenteRaquete().getPreferredSize(); //getSize(); 
             raquete.setImageWidth( dimensaoRaquete.width);
@@ -126,29 +152,38 @@ class Game implements Setup {
                                                     dimensaoRaquete.width, 
                                                                 dimensaoRaquete.height);
            
-      
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            
             Game.painel = new JPanel();
             Game.painel.setLayout(null); //Reinicia o layout e tira o padrão dos itens ficarem no topo
             Game.painel.add ( bola.obterComponenteBola() );
             Game.painel.add ( raquete.obterComponenteRaquete() );
             
+            /// ADICIONANDO OS TIJOLOS NO CENARIO
             for(Sprite ti : Game.listaTijolos){
                       Game.painel.add( ti.obterComponenteTijolo());
             }
             
-            for(ElementoConsumivel ec : Game.listaPowerUps){
-                      Game.painel.add( ec.obterComponentePowerUp() );
+            /// ADICIONANDO OS DEBUFFS NO CENARIO
+            for(ElementoConsumivel onDebuff : Game.listaDebuffs){
+                      Game.painel.add( onDebuff.obterComponenteDebuff());
+            }
+            
+            /// ADICIONANDO OS BUFFS NO CENARIO
+            for(ElementoConsumivel oneBuff : Game.listaBuffs){
+                      Game.painel.add( oneBuff.obterComponenteBuff());
             }
             
             Game.labelScoreNumeros = new JLabel();
             Game.labelScore = new JLabel();
             labelScore.setText("Score");
-            labelScore.setBounds(20, -50, 150, 150);
-            labelScore.setForeground(Color.WHITE);
-            labelScore.setFont(new Font("Verdana", Font.BOLD, 18));
+            labelScore.setBounds(20, -50, 150, 150); // X, Y, WIDTH, HEIGHT
+            labelScore.setForeground(Color.WHITE); // COR DA LETRA
+            labelScore.setFont( new Font("Verdana", Font.BOLD, 18) );
             
-            Game.painel.add(labelScore); // ADICIONANDO O LABEL DA PALAVRA 'Score'
-            Game.painel.add(Game.labelScoreNumeros);  // ADICIONANDO O LABEL DO NÚMERO DE PONTOS
+            Game.painel.add(labelScore); // ADICIONANDO O LABEL QUE CONTÉM A PALABRA 'Score'
+            Game.painel.add(Game.labelScoreNumeros);  // ADICIONANDO O LABEL QUE VAI VARIAR COM O SCORE
             
         // Game.painel.setPreferredSize(new Dimension(600, 600));
        //  Game.painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -157,18 +192,19 @@ class Game implements Setup {
             // CONFIGURANDO A TELA:
             JFrame tela = new JFrame("Breakout game");
             tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            tela.setBounds(500, 10, Setup.WIDTH, Setup.HEIGHT);  // X, Y (localizacao) width, height (tamanho do painel)
-            tela.setSize(new Dimension(Setup.WIDTH, Setup.HEIGHT));
+            tela.setBounds(500, 10, Setup.WIDTH, Setup.HEIGHT);  // X (DISTANCIA, DA JANELA DO JOGO PARA A PAREDE ESQUERDA), Y, width, height 
+            tela.setSize( new Dimension(Setup.WIDTH, Setup.HEIGHT) );
            // tela.setBackground(Color.black ); //Nao funciona
             tela.getContentPane().setBackground(Color.GRAY);
-            
-            tela.addKeyListener( (KeyListener) raquete); // A classe Raquete implementa a interface KeyListener
+             
+            // ATIVANDO O CONTROLE DA RAQUETE
+            tela.addKeyListener( (KeyListener) raquete); // A classe Raquete implementa a interface KeyListener, por isso pode adicionada ao método "addKeyListener()"
             
             // ADICIONANDO ELEMENTOS NA TELA:
             //tela.getContentPane().add( bola.obterComponenteBola());
             //tela.getContentPane().add( raquete.obterComponenteRaquete());
             tela.add(Game.painel);
-            tela.setResizable(false);
+            tela.setResizable(false); // Nao pemite que a tela seja redimensionada!
            // tela.repaint();
            // tela.revalidate();
             tela.setVisible(true);
@@ -179,22 +215,29 @@ class Game implements Setup {
             int segundos  =0;
 
             try{
-                while (true){ 
-                   //     System.out.println(segundo);
-                     //   segundo++;
+                while (Game.jogando){ 
+                    
                         Game.bola.desenhar();
                         Game.bola.atualizar();
                         Game.raquete.desenhar();
                         Game.desenharPontos();
                         
+                       
                         Game.verificarColisao( (Bola)  Game.bola); // VERIFICA COLISÃO DA BOLA COM AS PAREDES
+                        Game.verificarColisao( Game.bola, Game.listaDebuffs); // VERIFICA COLISAO ENTRE BOLA E DEBUFFs
                         Game.verificarColisao ( (Bola) Game.bola, Game.listaTijolos  ); // VERIFICA COLISÃO DA BOLA COM OS "TIJOLOS"
+                        Game.verificarColisao( Game.listaBuffs);// VERIFICA COLISAO ENTRE BOLA E BUFFs
                         
-                        for(ElementoConsumivel ec : Game.listaPowerUps){
-                             if (segundos == 1000)
+                        for(ElementoConsumivel ec : Game.listaDebuffs){
+                             if (segundos == 30) {// A CADA UM SEGUNDO A POSICAO DOS POWER UPS SAO ATUALIZADOS
                                        ec.atualizar();
+                                       segundos = 0;
+                                     //  System.out.println("posicao atualizada");
+                             }
                              ec.desenhar();
                         }
+                        
+                        Game.seVenceu();
                         
                         Thread.sleep(10);
                        ++segundos;
@@ -202,71 +245,143 @@ class Game implements Setup {
                 }
 
             }catch(InterruptedException e){
-                      System.out.println("Houve um erro na execução da Thread!!!!");
+                      System.out.println("Houve um erro na execução do loop principal do jogo!!!!");
             }
     }
     
-    
+ ///////////////////////////////////////////////////////////////////////////////////////////
     static void verificarColisao(Bola bola){
-         //  System.out.println("X2 da bola: "+ bola.getX2());
+           //  System.out.println("X2 da bola: "+ bola.getX2());
           
-           // VERIFICANDO COLISAO DA BOLA COM AS PAREDES DE CIMA ESQUERDA E DIREITA
-           if (bola.getY2() < Setup.HEIGHT){
-               
-                    if( (bola.getX() <= 0)  ||  ( (bola.getX2() ) >= (Setup.WIDTH-10) )  )
-                         bola.setDirX(-1);
+           // VERIFICANDO COLISAO DA BOLA COM TODAS AS PAREDES DO JOGO
+            if( bola.getY() <= 0){
+                 bola.setDirY(-1);
+            }
+            // ALTERANDO A DIRECAO DA BOLA HORIZONTALMENTE
+            else if( (bola.getX() <= 0)  ||  ( (bola.getX2() ) >= (Setup.WIDTH-10) )  ){
+                 bola.setDirX(-1);
 
-                    else if( (bola.getY() <= 0)  ||  (( bola.getY2() ) >= (Setup.HEIGHT-28) )  )
-                         bola.setDirY(-1);
-           }
+            // ALTERANDO A DIRECAO DA BOLA VERTICALMENTE
+            }else if( (bola.getY() <= 0)  ||  (( bola.getY2() ) >= (Setup.HEIGHT-28) )  ){
+                 bola.setDirY(-1);
+                    
+            }else if (bola.getY2() >= Setup.HEIGHT-50){
+                    Game.jogando = false;
+                    JOptionPane.showMessageDialog(null, "VOCÊ PERDEU !!!!" , "AVISO", JOptionPane.ERROR_MESSAGE);
+            }
            
            // VERIFICANDO COLISAO DA BOLA COM A RAQUETE:
            if( 
-               (bola.getY2() >= raquete.getY())  && 
+               (bola.getY2() >= raquete.getY()) && 
                    (bola.getY() <= raquete.getY2())  && 
-                         (bola.getX2()  >= raquete.getX()) && 
-                             (bola.getX() <= raquete.getX2()  )             
+                         (bola.getX2()  > raquete.getX()) && 
+                             (bola.getX() < raquete.getX2()  )             
                                   ){       bola.setDirY(-1);       }
+           
     }
+///////////////////////////////////////////////////////////////////////////////////////////
     
+ 
+
+    
+///////////////////////////////////////////////////////////////////////////////////////////
+    // BOLA E TIJOLOS
     private static void verificarColisao(Bola bola, ArrayList<Sprite> tijolos){
         
         for( Sprite tijolo : tijolos){ // VERIFICANDO COLISÃO DA BOLA COM CADA TIJOLO
               
+              // realizando o "downcasting"/especializando o tipo do objeto
                   Tijolo tlo = (Tijolo) tijolo; // TROCANDO O TIPO DO TIJOLO DE "SPRITE" PARA "TIJOLO" PARA ASSIM ACESSAR O MÉTODO "getDestrutiel()"
                  
-                  if (Game.isCollided(  bola,  (Tijolo) tijolo  ) && tlo.getDestrutivel()){ // SE COLIDIRAM, E O TIJOLO É DESTRUTÍVEL ENTÃO O MESMO DESAPARECE
-                           tlo.obterComponenteTijolo().setVisible(false);
-                           tlo.setDestrutivel(false);// TORNANDO O TIJOLO INDESTRUTÍVEL DEPOIS QUE ELE É APAGADO DA TELA PARA QUE ELE NÃO CONTABILIZE PONTOS
-                    };
+                  if ( tlo.getDestruido()==false &&  Game.isCollided(  bola,  (Tijolo) tijolo )){ // SE COLIDIRAM, E O TIJOLO É DESTRUTÍVEL ENTÃO O MESMO DESAPARECE
+                           tlo.obterComponenteTijolo().setVisible(false); // O TIJOLO FICA INVISIVEL APOS A COLISAO
+                           tlo.setDestruido(true);// TORNANDO O TIJOLO INDESTRUTÍVEL DEPOIS QUE ELE É APAGADO DA TELA PARA QUE ELE NÃO CONTABILIZE PONTOS
+                           // DEPOIS QUE DESTRUIDO O TIJOLO NAO PODE MAIS COLIDIR COM A BOLA
+                  };
+        }
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    
+    // BOLA E DEBUFFS
+    private static void verificarColisao(Sprite bol ,  ArrayList<ElementoConsumivel> debs){
+               
+        for ( ElementoConsumivel debuff  : debs){
+            
+                if (  (debuff.getEliminado()==false)  &&  (Game.isCollided( bol, (Debuff) debuff))  ){
+                  
+                        Bola bola = (Bola) bol; //downcasting  => CONVERTENDO O OBJETO DA SUPER-CLASSE PARA SUB-CLASSE
+                        debuff.setEliminado(true); 
+                        debuff.obterComponenteDebuff().setVisible(false);
+                        bola.setVelocidade(2); // A VELOCIDADE AUMENTA EM 5 PONTOS CASO A BOLA COLIDA COM 
+                }
         }
     }
     
+///////////////////////////////////////////////////////////////////////////////////////////
     
-    private static boolean isCollided(Bola bola, Tijolo ti){
+    // BOLA E BUFFS
+    private static void verificarColisao( ArrayList<ElementoConsumivel> buffs){
+               
+        for ( ElementoConsumivel buff  : buffs){
+                if (  (buff.getEliminado()==false)  &&  (Game.isCollided( Game.bola, (Buff) buff))  ){
+                        buff.setEliminado(true); 
+                        buff.obterComponenteBuff().setVisible(false);
+                        Game.score +=10;  // O BUFF INCREMENTA 10 PONTOS NOS SCORES!
+                }
+        }
+    }
+  
+    
+///////////////////////////////////////////////////////////////////////////////////////////
+    private static boolean isCollided(Bola bola, Tijolo ti){ // EXEMPLO DE SOBRECARGA DO MÉTODO "isCollided()"
                 Area bolaHitbox = new Area( bola.obterComponenteBola().getBounds()  );
                 Area tijoloHitbox = new Area( ti.obterComponenteTijolo().getBounds()  );
                 
                  // CASO A HITBOX DA BOLA TOQUE NA HITBOX DE "TIJOLO" É RETORNADO O VALOR "TRUE"
                 if ( bolaHitbox.intersects( tijoloHitbox.getBounds2D() )){
-                       Game.score++; 
+                       Game.score+=1; // O SCORE SÓ INCREMENTA EM UM PONTO CASO A BOLA COLIDA COM OS "TIJOLOS"
                        return true; 
                 }else
                        return false;
     }
     
+ ///////////////////////////////////////////////////////////////////////////////////////////
+    private static boolean isCollided(Sprite bola, Debuff debuff){  // EXEMPLO DE  MAIS UMA SOBRECARGA DO MÉTODO "isCollided()"
+                Area bolaHitbox = new Area( bola.obterComponenteBola().getBounds()  );
+                Area debuffHitbox = new Area( debuff.obterComponenteDebuff().getBounds()  );
+                
+                 // CASO A HITBOX DA BOLA TOQUE NA HITBOX DE "TIJOLO" É RETORNADO O VALOR "TRUE"
+                if ( bolaHitbox.intersects( debuffHitbox.getBounds2D() ))
+                        return true; 
+                else
+                       return false;
+    }
     
+///////////////////////////////////////////////////////////////////////////////////////////
+     private static boolean isCollided(Sprite bola, Buff buff){  // EXEMPLO DE MAIS UMA SOBRECARGA DO MÉTODO "isCollided()"
+                Area bolaHitbox = new Area( bola.obterComponenteBola().getBounds()  );
+                Area buffHitbox = new Area( buff.obterComponenteBuff().getBounds()  );
+                
+                 // CASO A HITBOX DA BOLA TOQUE NA HITBOX DE "TIJOLO" É RETORNADO O VALOR "TRUE"
+                if ( bolaHitbox.intersects( buffHitbox.getBounds2D() ))
+                        return true; 
+                else
+                       return false;
+    }
+    
+///////////////////////////////////////////////////////////////////////////////////////////
     public static int[] gerarMatrizCoordenadas(){
         
-            int[][] matrizValoresPossiveis = new int[][]{
-                { 20 , 300},
-                {100, 300},
-                {350, 300},
-                {400, 300},
-                {10, 500},
-                {100, 500},
-                {350, 500},
-                {400, 500}
+            // Criando matriz de 8 linhas e 2 colunas (8x2)
+            int[][] matrizValoresPossiveis = new int[][]{ 
+                { 50 , 400 },
+                {130,  400 },
+                {210,  400 },
+                {290, 400 },
+                {370, 500 },
+                {450, 500 },
+                {530, 500 },
+                {610, 500 }
            };
         
             int X =   matrizValoresPossiveis [ Game.gerar.nextInt(8)] [0];
@@ -281,9 +396,43 @@ class Game implements Setup {
                             
                     }
             }*/
-        
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    private static void seVenceu(){
+    
+            int buffsEliminados = 0, deBuffsEliminados=0, tijolosEliminados=0;
+            
+            for ( ElementoConsumivel debuff :  Game.listaDebuffs  ){
+                     if ( debuff.getEliminado() )
+                          ++ deBuffsEliminados;
+            }
+            
+             for ( ElementoConsumivel buff :  Game.listaBuffs  ){
+                     if ( buff.getEliminado() )
+                           ++buffsEliminados;
+            }
+             
+             
+             for ( Sprite til :  Game.listaTijolos  ){
+                     Tijolo tijolo = (Tijolo) til; // FAZENDO UM DOWNCASTING (CONVERTENDO OBJETO DE "SPRITE" PARA "TIJOLO")
+                     
+                     if ( tijolo.getDestruido() )
+                            ++tijolosEliminados;
+             }
+            
+            if (  (buffsEliminados==Game.listaBuffs.size() )  &&
+                           (deBuffsEliminados==Game.listaDebuffs.size())  &&
+                                    (tijolosEliminados==Game.listaTijolos.size() )    ){
+                       Game.jogando = false;
+                      JOptionPane.showMessageDialog(null, "UAUUU!     VOCÊ VENCEU !!!!!" , "PARABÉNS", JOptionPane.PLAIN_MESSAGE);
+            } 
     }
     
+    
+    
+///////////////////////////////////////////////////////////////////////////////////////////
     private static void desenharPontos(){
             JLabel numeros = Game.labelScoreNumeros;
             String numeroScore = "000";
@@ -299,9 +448,11 @@ class Game implements Setup {
             numeros.setText(numeroScore);
             numeros.setBounds(17, -5, 120, 120);
             numeros.setForeground(Color.WHITE);
-             //   score.setBackground(Color.BLUE);
             numeros.setFont(new Font("Verdana", Font.BOLD, 44));
       }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    
+    
     
 }
 

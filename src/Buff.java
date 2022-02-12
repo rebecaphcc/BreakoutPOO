@@ -2,11 +2,11 @@ package src;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-class Money extends ElementoConsumivel{
+class Buff extends ElementoConsumivel{
     
     private JLabel componente;
     
-    public Money(int X, int Y, JLabel compMoney){
+    public Buff(int X, int Y, JLabel compMoney){
             super(X, Y);
             this.componente = compMoney;
     }
@@ -15,16 +15,24 @@ class Money extends ElementoConsumivel{
     public void carregaImagem(String imgPath){
             // var ii = new ImageIcon();
             // imagemArq = ii.getImage();
-            super.setImage(new ImageIcon(imgPath));
+            super.setImage( new ImageIcon(imgPath) );
+            this.componente .setIcon(  new ImageIcon(imgPath)  );
     }
-
+    @Override
+    public JLabel obterComponenteBuff() { 
+            return this.componente; 
+    } 
+    @Override
+    public void setarComponenteBuff(JLabel c) { 
+            this.componente = c;
+    }
     
     
     
-    
-    
-    
-    
+    @Override
+    public void atualizar(){}
+    @Override
+    public void desenhar(){}
     
     
     
@@ -40,8 +48,8 @@ class Money extends ElementoConsumivel{
     public JLabel obterComponenteRaquete(){ return null;}
     @Override
     public void setarComponenteRaquete(JLabel c){ }
-     @Override
-     public JLabel obterComponentePowerUp(){ return null;}
     @Override
-     public void setarComponentePowerUp(JLabel c){}
+    public JLabel obterComponenteDebuff() { return null;   }
+    @Override
+    public void setarComponenteDebuff(JLabel c) {   }
 }

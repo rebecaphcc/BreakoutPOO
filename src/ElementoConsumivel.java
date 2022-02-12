@@ -4,13 +4,13 @@ import javax.swing.JLabel;
 abstract class ElementoConsumivel extends Sprite{
     
     protected int raio;
-    protected boolean eliminado = false;
-    protected String estado = "visivel";
+    protected boolean eliminado;
     protected JLabel componente ;
    // protected boolean capturado = false;
 
     public ElementoConsumivel(int X, int Y){
           super(X, Y);
+          this.setEliminado(false);
     }
 
     
@@ -22,12 +22,12 @@ abstract class ElementoConsumivel extends Sprite{
           this.raio = tamanhoRaio;
     }
 
-    public void setEliminar(){
-          this.eliminado = true;
-    }
-
-    public boolean foiEliminado(){
+    
+    public boolean getEliminado(){
           return this.eliminado;
+    }
+    public void setEliminado(boolean foiEliminado){
+          this.eliminado = foiEliminado;
     }
 
     

@@ -25,9 +25,15 @@ public class Bola extends Sprite {
     private void iniciaBola() {
             this.dirX = 1; // A bola inicia o jogo indo para a direita
             this.dirY = 1; // A bola inicia o jogo subindo
-            this.velocidade = 3;
+            setVelocidade(3);
     }
     
+    public int getVelocidade(){
+            return this.velocidade;
+    }
+    public void setVelocidade(int vel){
+            this.velocidade += vel;
+    }
     
     @Override
     public void carregaImagem(String imgPath) {
@@ -60,23 +66,25 @@ public class Bola extends Sprite {
             int X = super.getX() ; 
             int Y = super.getY() ;
 
-   /* A variável de direcao horizontal "dirX" 
-       indica que se a bola estará indo para a esquerda 
-      (valor -1) ou direita (valor 1)  */
-            X += (this.velocidade * this.dirX);
-            Y += (this.velocidade * this.dirY);
+        /* A variável de direcao horizontal "dirX" 
+            indica que se a bola estará indo para a esquerda 
+           (valor -1) ou direita (valor 1)  */
+            X += (getVelocidade() * this.dirX);
+            Y += (getVelocidade() * this.dirY);
 
             int x2 = X + super.getImageWidth();
             int y2 =Y + super.getImageHeight();
             
             super.setPosicao (X, Y);
             super.setPosicao2 (x2, y2);
+            
+            System.out.println("Y2: "+y2);
      }
    
+     
     @Override
     public void desenhar(){
            int[] XY = super.getPosicao();
-
           //  this.componente.setLocation(X, Y);
           //  this.componente.setBounds ( XY[0],  XY[1], super.getImageWidth(), super.getImageHeight());
           this.componente.setLocation(XY[0], XY[1]);
@@ -92,21 +100,21 @@ public class Bola extends Sprite {
     
     
     @Override
-    public JLabel obterComponenteTijolo() {  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public JLabel obterComponenteTijolo() {  return  null;  }
     @Override
-    public void setarComponenteTijolo(JLabel c) { throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void setarComponenteTijolo(JLabel c) { }
     @Override
-    public JLabel obterComponenteRaquete() {   throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public JLabel obterComponenteRaquete() {   return null; }
     @Override
-    public void setarComponenteRaquete(JLabel c) {  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void setarComponenteRaquete(JLabel c) {  }
     @Override
-     public JLabel obterComponentePowerUp( ){ return null; }
+    public JLabel obterComponenteDebuff() { return null;   }
     @Override
-     public void setarComponentePowerUp(JLabel c){}
+    public void setarComponenteDebuff(JLabel c) {   }
+    @Override
+    public JLabel obterComponenteBuff() { return null; }
+    @Override
+    public void setarComponenteBuff(JLabel c) { }
 }
 
 /*

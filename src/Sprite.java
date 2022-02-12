@@ -63,8 +63,10 @@ public abstract class Sprite {
     abstract public void setarComponenteTijolo(JLabel c);
     abstract public JLabel obterComponenteRaquete();
     abstract public void setarComponenteRaquete(JLabel c);
-    abstract public JLabel obterComponentePowerUp();
-    abstract public void setarComponentePowerUp(JLabel c);
+    abstract public JLabel obterComponenteDebuff();
+    abstract public void setarComponenteDebuff(JLabel c);
+    abstract public JLabel obterComponenteBuff();
+    abstract public void setarComponenteBuff(JLabel c);
     
     
      // MÉTODOS PARA A SOBRESCRITA

@@ -2,13 +2,14 @@ package src;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-class PowerUp extends ElementoConsumivel{
+class Debuff extends ElementoConsumivel{
     
     private JLabel componente;
     
-    public PowerUp(int X, int Y, JLabel comp){
+    public Debuff(int X, int Y, JLabel comp){
            super(X, Y);
            this.componente = comp;
+           super.setEliminado(false);
     }
 
     @Override
@@ -30,17 +31,18 @@ class PowerUp extends ElementoConsumivel{
             this.componente.setLocation( XY[0], XY[1]);
     }
     
+    
+    
      @Override
-     public JLabel obterComponentePowerUp(){ 
-            return this.componente;
+     public JLabel obterComponenteDebuff() { 
+            return this.componente;   
      }
-     
-    @Override
-     public void setarComponentePowerUp(JLabel c){
+     @Override
+     public void setarComponenteDebuff(JLabel c) { 
             this.componente = c;
      }
     
-    
+     
     
     
     
@@ -56,4 +58,8 @@ class PowerUp extends ElementoConsumivel{
     public JLabel obterComponenteRaquete(){ return null;}
     @Override
     public void setarComponenteRaquete(JLabel c){ }
+    @Override
+    public JLabel obterComponenteBuff() { return null; }
+    @Override
+    public void setarComponenteBuff(JLabel c) { }
 }
