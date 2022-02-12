@@ -14,7 +14,6 @@ public class Tijolo extends Sprite  {
     // CONTRUTOR 1
     public Tijolo (int X, int Y, int imageWidth, int imageHeight,  String cor) {
             super(X, Y, imageWidth, imageHeight); // PASSANDO AS VARIÁVEIS PARA O CONSTRUTOR DA SUPER CLASSE "Sprite"
-         //   super.setPosicao(x, y);
             iniciaTijolo(cor);
     }
     
@@ -27,7 +26,6 @@ public class Tijolo extends Sprite  {
 
     private void iniciaTijolo(String c) {
             setCor(c);
-       //     boolean decisaoAleatoria  = true; // Tijolo.decidirDestruicao.nextBoolean();
             setDestruido( false );
     }
 
@@ -38,7 +36,7 @@ public class Tijolo extends Sprite  {
             ImageIcon iconeDiminuido = new ImageIcon(
                     new ImageIcon( imgPath )
                             .getImage()
-                                    .getScaledInstance(70, 20, Image.SCALE_DEFAULT)
+                                    .getScaledInstance(70, 20, Image.SCALE_DEFAULT) // REDIMENSIONANDO IMAGEM DOS "TIJOLOS" COLORIDOS
             );
             this.componente.setIcon( iconeDiminuido);
     }
@@ -76,13 +74,12 @@ public class Tijolo extends Sprite  {
     public JLabel obterComponenteRaquete() { return null; }
     @Override
     public void setarComponenteRaquete(JLabel c) {  }
-     @Override
-     public JLabel obterComponenteDebuff() { return null;   }
-     @Override
-     public void setarComponenteDebuff(JLabel c) {   }
+    @Override
+    public JLabel obterComponenteDebuff() { return null;   }
+    @Override
+    public void setarComponenteDebuff(JLabel c) {   }
     @Override
     public JLabel obterComponenteBuff() { return null; }
     @Override
     public void setarComponenteBuff(JLabel c) {   }
-     
 }

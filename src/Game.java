@@ -8,8 +8,12 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Area;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 
@@ -27,6 +31,7 @@ class Game implements Setup {
     public static JLabel labelScoreNumeros; // JLabel por onde serão exibidos os números
     private static Random gerar = new Random();
     private static boolean jogando = true;
+    private static JFrame tela;
    
 // public static BufferStrategy strategy;
 
@@ -36,10 +41,9 @@ class Game implements Setup {
     }
     
     private static void startSetup() {
-            score = 000;
-          //  level = Setup.level;
-            bola = new Bola( Setup.INICIA_BOLA_X , Setup.INICIA_BOLA_Y, 50, 50, new JLabel());
-            raquete = new Raquete( (int) Setup.INICIA_RAQUETE_X, (int) Setup.INICIA_RAQUETE_Y, 100, 100, new JLabel() );
+            Game.score = 000;
+            Game.bola = new Bola( Setup.INICIA_BOLA_X , Setup.INICIA_BOLA_Y, 50, 50, new JLabel());
+            Game.raquete = new Raquete( (int) Setup.INICIA_RAQUETE_X, (int) Setup.INICIA_RAQUETE_Y, 100, 100, new JLabel() );
             Game.listaTijolos = new ArrayList<>(); 
             Game.listaDebuffs = new ArrayList<>();
             Game.listaBuffs = new ArrayList<>();
@@ -78,10 +82,9 @@ class Game implements Setup {
                     }
             }
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-           
-            int[][] coordBuffs = new int[][]{  { (Setup.WIDTH/2), 20 },    { (Setup.WIDTH)-100, 20 },   { (Setup.WIDTH)-100, 600 },  { 20, 600 } }; 
+            int[][] coordBuffs = new int[][]{  { (Setup.WIDTH/2), 20 },    { (Setup.WIDTH)-100, 20 },   { (Setup.WIDTH)-100, 500 },  { Setup.WIDTH/2, 430 } }; 
             
-              // CRIANDO 10 BUFFs 
+              // CRIANDO 4 BUFFs  (OU MOEDAS)
             for ( int b= 0;  b < coordBuffs.length; b++  ){
                 
                    Buff buff = new Buff( coordBuffs[b][0], coordBuffs[b][1], new JLabel() ) ;
@@ -153,12 +156,13 @@ class Game implements Setup {
                                                                 dimensaoRaquete.height);
            
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
-            
-            Game.painel = new JPanel();
+           Game.painel =  new JPanel();
+           
+       
             Game.painel.setLayout(null); //Reinicia o layout e tira o padrão dos itens ficarem no topo
             Game.painel.add ( bola.obterComponenteBola() );
             Game.painel.add ( raquete.obterComponenteRaquete() );
+            
             
             /// ADICIONANDO OS TIJOLOS NO CENARIO
             for(Sprite ti : Game.listaTijolos){
@@ -175,42 +179,54 @@ class Game implements Setup {
                       Game.painel.add( oneBuff.obterComponenteBuff());
             }
             
-            Game.labelScoreNumeros = new JLabel();
+            
+            
+            Game.labelScoreNumeros = new JLabel( );
             Game.labelScore = new JLabel();
             labelScore.setText("Score");
             labelScore.setBounds(20, -50, 150, 150); // X, Y, WIDTH, HEIGHT
             labelScore.setForeground(Color.WHITE); // COR DA LETRA
             labelScore.setFont( new Font("Verdana", Font.BOLD, 18) );
             
+            
             Game.painel.add(labelScore); // ADICIONANDO O LABEL QUE CONTÉM A PALABRA 'Score'
             Game.painel.add(Game.labelScoreNumeros);  // ADICIONANDO O LABEL QUE VAI VARIAR COM O SCORE
-            
-        // Game.painel.setPreferredSize(new Dimension(600, 600));
-       //  Game.painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            Game.painel.setBackground(Color.BLACK);
+     
+     
+            try{
+                    BufferedImage imagem = ImageIO.read( new File("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\breakout game background castel.png") );
+                    JLabel fundo = new JLabel( new ImageIcon( imagem));
+                    fundo.setBounds(0, 0, Setup.WIDTH, Setup.HEIGHT);
+                    Game.painel.add(fundo);
+                    
+            }catch ( IOException error){
+                    JOptionPane.showMessageDialog(null, "Houve um erro ao tentar incorporar a image de fundo!!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    error.printStackTrace();
+                    Game.painel.setBackground(Color.BLACK); 
+                // CASO NAO SEJA POSSIVEL IMPORTAR A IMAGEM... O FUNDO T´ERÁ COR PRETA
+            }
+       
+       
             
             // CONFIGURANDO A TELA:
-            JFrame tela = new JFrame("Breakout game");
+            Game.tela = new JFrame("Breakout game");
             tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            tela.setBounds(500, 10, Setup.WIDTH, Setup.HEIGHT);  // X (DISTANCIA, DA JANELA DO JOGO PARA A PAREDE ESQUERDA), Y, width, height 
+            tela.setBounds(300, 10, Setup.WIDTH, Setup.HEIGHT);  // X (DISTANCIA, DA JANELA DO JOGO PARA A PAREDE ESQUERDA), Y, width, height 
             tela.setSize( new Dimension(Setup.WIDTH, Setup.HEIGHT) );
-           // tela.setBackground(Color.black ); //Nao funciona
-            tela.getContentPane().setBackground(Color.GRAY);
+        
              
             // ATIVANDO O CONTROLE DA RAQUETE
             tela.addKeyListener( (KeyListener) raquete); // A classe Raquete implementa a interface KeyListener, por isso pode adicionada ao método "addKeyListener()"
             
             // ADICIONANDO ELEMENTOS NA TELA:
-            //tela.getContentPane().add( bola.obterComponenteBola());
-            //tela.getContentPane().add( raquete.obterComponenteRaquete());
             tela.add(Game.painel);
             tela.setResizable(false); // Nao pemite que a tela seja redimensionada!
-           // tela.repaint();
-           // tela.revalidate();
             tela.setVisible(true);
             gameLoop();
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     static void gameLoop() {
             int segundos  =0;
 
@@ -249,7 +265,7 @@ class Game implements Setup {
             }
     }
     
- ///////////////////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static void verificarColisao(Bola bola){
            //  System.out.println("X2 da bola: "+ bola.getX2());
           
@@ -262,12 +278,11 @@ class Game implements Setup {
                  bola.setDirX(-1);
 
             // ALTERANDO A DIRECAO DA BOLA VERTICALMENTE
-            }else if( (bola.getY() <= 0)  ||  (( bola.getY2() ) >= (Setup.HEIGHT-28) )  ){
+            }else if( (bola.getY() <= 0)   ){
                  bola.setDirY(-1);
                     
-            }else if (bola.getY2() >= Setup.HEIGHT-50){
-                    Game.jogando = false;
-                    JOptionPane.showMessageDialog(null, "VOCÊ PERDEU !!!!" , "AVISO", JOptionPane.ERROR_MESSAGE);
+            }else if (bola.getY2() >= Setup.HEIGHT-30){
+                   Game.imprimirMensagemFinal("PERDEU");
             }
            
            // VERIFICANDO COLISAO DA BOLA COM A RAQUETE:
@@ -276,13 +291,19 @@ class Game implements Setup {
                    (bola.getY() <= raquete.getY2())  && 
                          (bola.getX2()  > raquete.getX()) && 
                              (bola.getX() < raquete.getX2()  )             
-                                  ){       bola.setDirY(-1);       }
+                                  ){      
+                                            bola.setDirY(-1);   // ALTERA A DIRECAO DA BOLA
+                                            bola.setY(  Game.raquete.getY() - bola.getImageHeight()); 
+                                            bola.setY2(  Game.raquete.getY());  
+                                        // A BOLA É DESLOCADA DE FORMA A  FICAR TANGENTE 
+                                        // À RAQUETE CASO A ULTRAPASSE
+                                            
+           }
            
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
     
  
-
     
 ///////////////////////////////////////////////////////////////////////////////////////////
     // BOLA E TIJOLOS
@@ -300,25 +321,26 @@ class Game implements Setup {
                   };
         }
     }
-///////////////////////////////////////////////////////////////////////////////////////////
     
+    
+///////////////////////////////////////////////////////////////////////////////////////////
     // BOLA E DEBUFFS
     private static void verificarColisao(Sprite bol ,  ArrayList<ElementoConsumivel> debs){
                
         for ( ElementoConsumivel debuff  : debs){
-            
                 if (  (debuff.getEliminado()==false)  &&  (Game.isCollided( bol, (Debuff) debuff))  ){
                   
-                        Bola bola = (Bola) bol; //downcasting  => CONVERTENDO O OBJETO DA SUPER-CLASSE PARA SUB-CLASSE
+                        Bola bola = (Bola) bol; //downcasting  => CONVERTENDO O OBJETO DA SUPER-CLASSE "Sprite" PARA SUB-CLASSE "Bola"
                         debuff.setEliminado(true); 
                         debuff.obterComponenteDebuff().setVisible(false);
-                        bola.setVelocidade(2); // A VELOCIDADE AUMENTA EM 5 PONTOS CASO A BOLA COLIDA COM 
+                        bola.setVelocidade(1.8); // A VELOCIDADE AUMENTA EM 2.5x  CASO A BOLA COLIDA COM O DEBUFF
                 }
         }
     }
     
-///////////////////////////////////////////////////////////////////////////////////////////
     
+    
+///////////////////////////////////////////////////////////////////////////////////////////
     // BOLA E BUFFS
     private static void verificarColisao( ArrayList<ElementoConsumivel> buffs){
                
@@ -326,13 +348,14 @@ class Game implements Setup {
                 if (  (buff.getEliminado()==false)  &&  (Game.isCollided( Game.bola, (Buff) buff))  ){
                         buff.setEliminado(true); 
                         buff.obterComponenteBuff().setVisible(false);
-                        Game.score +=10;  // O BUFF INCREMENTA 10 PONTOS NOS SCORES!
+                        Game.score +=200;  // O BUFF INCREMENTA 200 PONTOS NOS SCORES!
                 }
         }
     }
-  
-    
 ///////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    
     private static boolean isCollided(Bola bola, Tijolo ti){ // EXEMPLO DE SOBRECARGA DO MÉTODO "isCollided()"
                 Area bolaHitbox = new Area( bola.obterComponenteBola().getBounds()  );
                 Area tijoloHitbox = new Area( ti.obterComponenteTijolo().getBounds()  );
@@ -386,22 +409,12 @@ class Game implements Setup {
         
             int X =   matrizValoresPossiveis [ Game.gerar.nextInt(8)] [0];
             int Y =  matrizValoresPossiveis [ Game.gerar.nextInt(8)] [1];
-            
             return  new int[]{X, Y}; 
-            /*  
-            int[][] matrizProvisoria = new int[8][2];
-            
-            for (int coluna=0; coluna <8; coluna++){
-                    for (int linha=0; linha<2; linha++){
-                            
-                    }
-            }*/
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
     
     
     private static void seVenceu(){
-    
             int buffsEliminados = 0, deBuffsEliminados=0, tijolosEliminados=0;
             
             for ( ElementoConsumivel debuff :  Game.listaDebuffs  ){
@@ -422,12 +435,13 @@ class Game implements Setup {
                             ++tijolosEliminados;
              }
             
+             
             if (  (buffsEliminados==Game.listaBuffs.size() )  &&
                            (deBuffsEliminados==Game.listaDebuffs.size())  &&
                                     (tijolosEliminados==Game.listaTijolos.size() )    ){
-                       Game.jogando = false;
-                      JOptionPane.showMessageDialog(null, "UAUUU!     VOCÊ VENCEU !!!!!" , "PARABÉNS", JOptionPane.PLAIN_MESSAGE);
-            } 
+                                                    Game.imprimirMensagemFinal("VENCEU");
+             } 
+            
     }
     
     
@@ -452,7 +466,29 @@ class Game implements Setup {
       }
     ///////////////////////////////////////////////////////////////////////////////////////////
     
-    
+    private static  void imprimirMensagemFinal(String resultado){
+             int decisao = 0;
+        
+             if (resultado =="PERDEU")
+                         decisao = JOptionPane.showConfirmDialog(null, " VOCÊ PERDEU!!!! \n DESEJA REINICIAR O JOGO? " , "AVISO", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+             
+             else if ( resultado == "VENCEU")
+                         decisao = JOptionPane.showInternalConfirmDialog(null, "PARABÉNS!!  \n  DESEJA REINICIAR O JOGO?",  "UUUAUUU! VOCÊ VENCEU !!!!!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+       
+             
+             switch(decisao){  // variable X might not have been initialized
+                            case JOptionPane.YES_OPTION:
+                                 Game.tela.dispose();
+                                 Game.startSetup(); // REINICIA O JOGO A PARTIR DO SETUP
+                                 break;
+                                 
+                            case JOptionPane.NO_OPTION:
+                                 Game.jogando = false; // PARA O LOOP DO JOGO
+                                 Game.tela.dispose(); // FECHA A JANELA
+                                 System.exit(0); // ENCERRA A EXECUÇÃO DO JOGO
+                                 break;
+            }
+      }
     
 }
 

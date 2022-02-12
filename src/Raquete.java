@@ -1,20 +1,17 @@
 package src;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import src.Setup;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import static src.Game.raquete;
-import src.Setup;
+
 
 public class Raquete extends Sprite implements KeyListener{
     int velocidade = 15;
     private JLabel componente;
-    
+    private int deslocamento =  40;
+            
     public Raquete(int X, int Y, int imageWidth, int imageHeight, JLabel lab) {
             super(X, Y, imageWidth, imageHeight);
             this.componente = lab;
@@ -40,13 +37,11 @@ public class Raquete extends Sprite implements KeyListener{
         }
    
   
-
-    
+        
         @Override
          public void atualizar(){
                 //...
          }
-   
         @Override
         public void desenhar(){
                  int[] XY = super.getPosicao();
@@ -55,6 +50,8 @@ public class Raquete extends Sprite implements KeyListener{
                  // this.componente.setBounds ( XY[0],  XY[1], super.getImageWidth(), super.getImageHeight());
         }
     
+        
+        
         @Override
         public void keyTyped(KeyEvent event) {   }
                     
@@ -62,26 +59,25 @@ public class Raquete extends Sprite implements KeyListener{
         public void keyPressed(KeyEvent event) { 
                 int key = event.getKeyCode();
                     
-                    if (  (key == KeyEvent.VK_D)  ||  (key == KeyEvent.VK_RIGHT)   ){
-                           int X1 = raquete.getX() + 30;
-                           int X2 = raquete.getX2() + 30;  // raquete.getX() + raquete.getImageWidth() + 30;
-                           System.out.println("width: "+raquete.getImageWidth() + "// X2: "+X2);
+                if (  (key == KeyEvent.VK_D)  ||  (key == KeyEvent.VK_RIGHT)   ){
+                           int X1 = raquete.getX() + this.deslocamento;
+                           int X2 = raquete.getX2() +  this.deslocamento;  // raquete.getX() + raquete.getImageWidth() + 30;
                            
-                           if ( X2 <= Setup.WIDTH-30) {
+                           if ( X2 <= Setup.WIDTH-13) {
                                   raquete.setX (X1);  
                                   raquete.setX2 (X2);
                            }
 
 
-                    }  else if ( (key == KeyEvent.VK_A)  ||  (key == KeyEvent.VK_LEFT)  ){
-                           int X1 = raquete.getX() - 30;
-                           int X2 = X1 + raquete.getImageWidth();
+                 }  else if ( (key == KeyEvent.VK_A)  ||  (key == KeyEvent.VK_LEFT)  ){
+                           int X1 = raquete.getX() -  this.deslocamento;
+                           int X2 = X1 + super.getImageWidth();
 
-                           if ( X1 >= 0) {
+                           if ( X1 >= 2) {
                                   raquete.setX(X1);  
                                   raquete.setX2(X2);
                            }
-                    }
+                 }
         }
         
         @Override

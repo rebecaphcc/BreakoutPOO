@@ -3,22 +3,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Bola extends Sprite {
-    private int dirX; 
-    private int dirY; 
-    private int velocidade;
-    private JLabel componente;
+            private int dirX; 
+            private int dirY; 
+            private double velocidade;
+            private JLabel componente;
     
     //Construtor da classe
     public Bola(int X, int Y, int imageWidth, int imageHeight, JLabel bolaLabel) {
+        
             super(X, Y, imageWidth, imageHeight);
-            //bolaLabel.setLocation(X, Y) //Nao funciona, mas sim o setBounds()
-            //bolaLabel.setLayout(null);
-            
             this.componente = bolaLabel;
-           // A imagem sempre deve ser inserida primeiro no JLabel:
-       //     carregaImagem("C:\\Users\\Patrick\\Documents\\NetBeansProjects\\BreakoutPOO\\src\\imagens\\bola.png");
-        //    Dimension dimeb = bolaLabel.getPreferredSize();
-         //   bolaLabel.setBounds(170, 600, dimeb.width, dimeb.height);
             this.iniciaBola ();
     }
 
@@ -28,10 +22,10 @@ public class Bola extends Sprite {
             setVelocidade(3);
     }
     
-    public int getVelocidade(){
+    public double getVelocidade(){
             return this.velocidade;
     }
-    public void setVelocidade(int vel){
+    public void setVelocidade(double vel){
             this.velocidade += vel;
     }
     
@@ -77,16 +71,12 @@ public class Bola extends Sprite {
             
             super.setPosicao (X, Y);
             super.setPosicao2 (x2, y2);
-            
-            System.out.println("Y2: "+y2);
      }
    
      
     @Override
     public void desenhar(){
            int[] XY = super.getPosicao();
-          //  this.componente.setLocation(X, Y);
-          //  this.componente.setBounds ( XY[0],  XY[1], super.getImageWidth(), super.getImageHeight());
           this.componente.setLocation(XY[0], XY[1]);
           // MOVENDO A BOLA
     }
@@ -116,6 +106,25 @@ public class Bola extends Sprite {
     @Override
     public void setarComponenteBuff(JLabel c) { }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 
