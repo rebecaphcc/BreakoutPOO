@@ -1,18 +1,26 @@
-## Getting Started
+# :video_game: Breakout game
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+# :pencil2: Sobre:
+Jogo desenvolvido para a entrega do trabalho final da cadeira de Programação Orientada à Objetos no semestre 2021.2. A aplicação escrita em Java fez uso dos princiais
+conceitos ensinados ao longo do semestre, são eles Polimorfismo, Herança, Encapsulamento e Abstração. Também utilizou de atributos e métodos estáticos, implementação de interfaces e sobrescrita de métodos. Mais abaixo, é possível entender como funciona o jogo e como instalá-lo no seu computador.
+<Br />
+<Br />
 
-## Folder Structure
+# :desktop_computer: Criadores:
+:large_orange_diamond: Rebeca Praciano Haddad - 422611
+:large_orange_diamond: Marcos Patrick Saraiva da Silva - 496459
+<Br />
+<Br />
 
-The workspace contains two folders by default, where:
+# :eye: Preview do jogo:
+<img src="https://i.imgur.com/1aZ6vwN.png" width="650" height="550"/>
+<Br />
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+# :information_source: Tutorial: 
+<img src="https://i.imgur.com/b2K4cO7.png" />
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+### OBS: Utilize os botões A e D do teclado para mover a raquete, respectivamente, para a esquerda e direita
+<Br />
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+# Tecnologias/Bibliotecas utilizadas:
+### JDK 1.8.0
